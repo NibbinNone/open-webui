@@ -9,6 +9,7 @@
 	const i18n = getContext('i18n');
 
 	export let selectedModels = [''];
+	export let selectedModelInfos = [];
 	export let disabled = false;
 
 	export let showSetDefault = true;
@@ -28,6 +29,9 @@
 	$: if (selectedModels.length > 0 && $models.length > 0) {
 		selectedModels = selectedModels.map((model) =>
 			$models.map((m) => m.id).includes(model) ? model : ''
+		);
+		selectedModelInfos = selectedModels.map((modelId) =>
+			$models.find((m) => m.id === modelId) || ''
 		);
 	}
 </script>
@@ -52,6 +56,22 @@
 					/>
 				</div>
 			</div>
+			
+			{#if selectedModelInfos[selectedModelIdx]?.info?.base_model_id}
+			
+			<div class="mr-1 max-w-full">
+				<Selector
+					id={`${selectedModelIdx}`}
+					placeholder={$i18n.t('Select a base model')}
+					items={$models.filter((model) => !model?.preset && model?.owned_by !== 'arena').map((model) => ({
+						value: model.id,
+						label: model.name,
+						model: model
+					}))}
+					bind:value={selectedModelInfos[selectedModelIdx].info.base_model_id}
+				/>
+			</div>
+			{/if}
 
 			{#if selectedModelIdx === 0}
 				<div

@@ -1553,6 +1553,7 @@
 			{
 				stream: stream,
 				model: model.id,
+				base_model: model?.info?.base_model_id,
 				messages: messages,
 				params: {
 					...$settings?.params,

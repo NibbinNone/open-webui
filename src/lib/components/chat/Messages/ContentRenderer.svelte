@@ -171,7 +171,7 @@
 	<FloatingButtons
 		bind:this={floatingButtonsElement}
 		{id}
-		model={model?.id}
+		model={model}
 		messages={createMessagesList(history, id)}
 		onAdd={({ modelId, parentId, messages }) => {
 			console.log(modelId, parentId, messages);

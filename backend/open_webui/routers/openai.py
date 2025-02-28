@@ -595,10 +595,14 @@ async def generate_chat_completion(
 
     model_id = form_data.get("model")
     model_info = Models.get_model_by_id(model_id)
+    base_model_id = payload.pop("base_model", None)
 
     # Check model info and override the payload
     if model_info:
-        if model_info.base_model_id:
+        if base_model_id:
+            payload["model"] = base_model_id
+            model_id = base_model_id
+        elif model_info.base_model_id:
             payload["model"] = model_info.base_model_id
             model_id = model_info.base_model_id
 
