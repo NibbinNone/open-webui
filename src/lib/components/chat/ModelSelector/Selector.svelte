@@ -352,12 +352,12 @@
 		<button
 			class="flex w-full text-left px-0.5 outline-hidden bg-transparent truncate {triggerClassName} justify-between font-medium placeholder-gray-400 focus:outline-hidden"
 			on:mouseenter={async () => {
-				models.set(
-					await getModels(
-						localStorage.token,
-						$config?.features?.enable_direct_connections && ($settings?.directConnections ?? null)
-					)
-				);
+//				models.set(
+//					await getModels(
+//						localStorage.token,
+//						$config?.features?.enable_direct_connections && ($settings?.directConnections ?? null)
+//					)
+//				);
 			}}
 			type="button"
 		>

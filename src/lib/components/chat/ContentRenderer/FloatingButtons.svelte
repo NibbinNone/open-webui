@@ -40,7 +40,8 @@
 	};
 
 	const askHandler = async () => {
-		if (!model) {
+		const modelId = model?.id;
+		if (!modelId) {
 			toast.error('Model not selected');
 			return;
 		}
@@ -55,7 +56,8 @@
 
 		responseContent = '';
 		const [res, controller] = await chatCompletion(localStorage.token, {
-			model: model,
+			model: modelId,
+			base_model: model?.info?.base_model_id,
 			messages: [
 				...messages,
 				{
@@ -123,7 +125,8 @@
 	};
 
 	const explainHandler = async () => {
-		if (!model) {
+		const modelId = model?.id;
+		if (!modelId) {
 			toast.error('Model not selected');
 			return;
 		}
@@ -135,7 +138,8 @@
 
 		responseContent = '';
 		const [res, controller] = await chatCompletion(localStorage.token, {
-			model: model,
+			model: modelId,
+			base_model: model?.info?.base_model_id,
 			messages: [
 				...messages,
 				{
@@ -215,7 +219,7 @@
 		];
 
 		onAdd({
-			modelId: model,
+			modelId: model?.id,
 			parentId: id,
 			messages: messages
 		});
