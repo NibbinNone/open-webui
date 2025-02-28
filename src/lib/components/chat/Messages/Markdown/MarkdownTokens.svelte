@@ -242,6 +242,7 @@
 	{:else if token.type === 'details'}
 		<Collapsible
 			title={token.summary}
+			open={token?.attributes?.type === 'reasoning'}
 			attributes={token?.attributes}
 			className="w-full space-y-1"
 			dir="auto"
