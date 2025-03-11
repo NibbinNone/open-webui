@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import json
+import random
 import logging
 from pathlib import Path
 from typing import Literal, Optional, overload
@@ -662,6 +663,7 @@ async def generate_chat_completion(
 
     url = request.app.state.config.OPENAI_API_BASE_URLS[idx]
     key = request.app.state.config.OPENAI_API_KEYS[idx]
+    key = random.choice(key.split(';'))
 
     # Fix: o1,o3 does not support the "max_tokens" parameter, Modify "max_tokens" to "max_completion_tokens"
     is_o1_o3 = payload["model"].lower().startswith(("o1", "o3-"))
