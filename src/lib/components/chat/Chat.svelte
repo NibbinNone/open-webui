@@ -1503,8 +1503,8 @@
 			params?.stream_response ??
 			true;
 
-		let messages = [
-			params?.system || $settings.system || (responseMessage?.userContext ?? null)
+		let history_messages = selectedModelIds.length > 1 ? Object.values(_history.messages).filter((message) => message?.model === model.id || message?.models?.includes(model.id)) : createMessagesList(_history, responseMessageId);
+		let prompt_message = params?.system || $settings.system || (responseMessage?.userContext ?? null)
 				? {
 						role: 'system',
 						content: `${promptTemplate(
@@ -1522,8 +1522,10 @@
 								: ''
 						}`
 					}
-				: undefined,
-			...createMessagesList(_history, responseMessageId).map((message) => ({
+				: undefined;
+		let messages = [
+			prompt_message,
+			...history_messages.map((message) => ({
 				...message,
 				content: removeDetails(message.content, ['reasoning', 'code_interpreter'])
 			}))
