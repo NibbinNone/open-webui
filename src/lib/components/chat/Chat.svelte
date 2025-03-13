@@ -1241,7 +1241,6 @@
 	const submitPrompt = async (userPrompt, { _raw = false } = {}) => {
 		console.log('submitPrompt', userPrompt, $chatId);
 
-		const messages = createMessagesList(history, history.currentId);
 		const _selectedModels = selectedModels.map((modelId) =>
 			$models.map((m) => m.id).includes(modelId) ? modelId : ''
 		);
@@ -1258,11 +1257,16 @@
 			return;
 		}
 
-		if (messages.length != 0 && messages.at(-1).done != true) {
+		const history_messages = Object.values(history.messages);
+		const messages = selectedModels.map((modelId) =>
+			history_messages.filter((message) => message?.model === modelId || message?.models?.includes(modelId)).at(-1)
+		).filter(message => message !== undefined);
+
+		if (messages.length != 0 && messages.some(message => message && message.done !== true)) {
 			// Response not done
 			return;
 		}
-		if (messages.length != 0 && messages.at(-1).error && !messages.at(-1).content) {
+		if (messages.length != 0 && messages.some(message => message && message.error && !message.content)) {
 			// Error in response
 			toast.error($i18n.t(`Oops! There was an error in the previous response.`));
 			return;
@@ -1329,7 +1333,9 @@
 
 		// Append messageId to childrenIds of parent message
 		if (messages.length !== 0) {
-			history.messages[messages.at(-1).id].childrenIds.push(userMessageId);
+			messages.forEach((message) => {
+				history.messages[message.id].childrenIds.push(userMessageId);
+			});
 		}
 
 		// focus on chat input
