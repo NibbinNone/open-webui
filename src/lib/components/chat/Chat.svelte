@@ -1369,8 +1369,8 @@
 		}
 		if (messages.length != 0 && messages.some(message => message && message.error && !message.content)) {
 			// Error in response
-			toast.error($i18n.t(`Oops! There was an error in the previous response.`));
-			return;
+			// toast.error($i18n.t(`Oops! There was an error in the previous response.`));
+			// return;
 		}
 		if (
 			files.length > 0 &&
