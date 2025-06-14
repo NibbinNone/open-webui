@@ -141,6 +141,7 @@
 	let chatFiles = [];
 	let files = [];
 	let params = {};
+	let previousModelId = null;
 
 	$: if (chatIdProp) {
 		(async () => {
@@ -210,6 +211,7 @@
 	const resetInput = () => {
 		console.debug('resetInput');
 		setToolIds();
+		setSystem();
 
 		selectedFilterIds = [];
 		webSearchEnabled = false;
@@ -237,6 +239,14 @@
 			selectedToolIds = [];
 		}
 	};
+
+	const setSystem = async () => {
+		const model = atSelectedModel ?? $models.find((m) => m.id === selectedModels[0]);
+		if (model && model.id !== previousModelId) {
+			params["system"] = model?.info?.params?.system ?? $settings?.system ?? '';
+			previousModelId = model.id;
+		}
+	}
 
 	const showMessage = async (message) => {
 		await tick();
@@ -484,6 +494,7 @@
 						controlPaneComponent.openPane();
 					} else {
 						controlPane.collapse();
+						saveChatParamsHandler($chatId);
 					}
 				} catch (e) {
 					// ignore
@@ -778,6 +789,9 @@
 
 		autoScroll = true;
 
+		params = {};
+		previousModelId = null;
+
 		resetInput();
 		await chatId.set('');
 		await chatTitle.set('');
@@ -788,7 +802,6 @@
 		};
 
 		chatFiles = [];
-		params = {};
 
 		if ($page.url.searchParams.get('youtube')) {
 			uploadYoutubeTranscription(
@@ -1972,6 +1985,14 @@
 			}
 		}
 	};
+
+	const saveChatParamsHandler = async (_chatId) => {
+		if (!$temporaryChatEnabled) {
+			await updateChatById(localStorage.token, _chatId, {
+				params: params
+			});
+		}
+	}
 </script>
 
 <svelte:head>
